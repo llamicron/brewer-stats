@@ -16,7 +16,7 @@ module Brewer
       end
 
       # :nocov:
-      def log(interval: 60)
+      def log(interval: 15)
         while true do
           capture_snapshot
           store
@@ -34,7 +34,7 @@ module Brewer
         store = YAML::Store.new @log_file
         store.transaction {
           @state.each do |k, v|
-            store[Time.now] = {k => v}
+            store[Time.now.to_i] = {k => v}
           end
         }
       end
@@ -49,9 +49,13 @@ module Brewer
         true
       end
 
-      def log_file(new_file=false)
+      def log_file=(new_file=false)
         @log_file = new_file if new_file
         create_log_file
+        @log_file
+      end
+
+      def log_file
         @log_file
       end
 

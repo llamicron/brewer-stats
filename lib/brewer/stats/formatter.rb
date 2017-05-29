@@ -3,6 +3,7 @@ module Brewer
     class Formatter
 
       attr_accessor :log_contents
+      attr_reader :logger
 
       def initialize
         @logger = Logger.new
