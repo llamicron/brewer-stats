@@ -2,19 +2,20 @@ module Brewer
   module Stats
     class Logger
 
-      attr_reader :controller, :log_file
+      attr_reader :controller, :stats_dir
       attr_accessor :state
 
       def initialize
         @controller = Brewer::Controller.new
         @stats_dir = Dir.home + "/.brewer/stats/"
-        @log_file = @stats_dir + "log"
+        @log_file = @stats_dir + "log.yml"
         @state = {}
 
         create_stats_directory
         create_log_file
       end
 
+      # :nocov:
       def log(interval: 60)
         while true do
           capture_snapshot
@@ -22,6 +23,7 @@ module Brewer
           sleep(interval)
         end
       end
+      # :nocov:
 
       def capture_snapshot
         @state['pv'] = @controller.pv
@@ -44,6 +46,17 @@ module Brewer
 
       def create_log_file
         File.open(@log_file, 'w') unless File.exists?(@log_file)
+        true
+      end
+
+      def log_file(new_file=false)
+        @log_file = new_file if new_file
+        create_log_file
+        @log_file
+      end
+
+      def clear_log_file
+        File.open(@log_file, 'w') {|file| file.truncate(0) }
         true
       end
 
