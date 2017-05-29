@@ -15,6 +15,7 @@ task :console do
   end
 
   @logger = Brewer::Stats::Logger.new
+  @form = Brewer::Stats::Formatter.new
 
   ARGV.clear
   Pry.start

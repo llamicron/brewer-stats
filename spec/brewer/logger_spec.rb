@@ -4,7 +4,7 @@ describe Brewer::Stats::Logger do
 
   before :each do
     @logger = Brewer::Stats::Logger.new
-    @logger.log_file = @logger.stats_dir + "test_log.yml"
+    $log_file = $stats_dir + "test_log.yml"
   end
 
   describe "#new" do
@@ -27,11 +27,11 @@ describe Brewer::Stats::Logger do
 
   describe ".store" do
     before { @logger.clear_log_file }
-    specify { expect(File.zero?(@logger.log_file)).to be true }
+    specify { expect(File.zero?($log_file)).to be true }
     it "can store the current state in YAML" do
       @logger.capture_snapshot
       @logger.store
-      expect(File.zero?(@logger.log_file)).to be false
+      expect(File.zero?($log_file)).to be false
     end
   end
 end
