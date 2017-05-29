@@ -1,7 +1,8 @@
-require "brewer/stats/version"
+require "brewer/stats/"
+require "brewer"
 
 module Brewer
   module Stats
-    # Your code goes here...
+
   end
 end
