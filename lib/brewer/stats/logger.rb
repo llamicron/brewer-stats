@@ -2,23 +2,24 @@ module Brewer
   module Stats
     class Logger
 
-      attr_reader :controller, :stats_dir
-      attr_accessor :state
+      attr_reader :controller
+      attr_accessor :state, :interval
 
       def initialize
         @controller = Brewer::Controller.new
         @state = {}
+        @interval = 2
 
         create_stats_directory
         create_log_file
       end
 
       # :nocov:
-      def log(interval: 15)
+      def log
         while true do
           capture_snapshot
           store
-          sleep(interval)
+          sleep(@interval)
         end
       end
       # :nocov:
@@ -29,7 +30,7 @@ module Brewer
       end
 
       def store
-        store = YAML::Store.new $log_file
+        store = YAML::Store.new $stats_dir + $log_file
         store.transaction {
           @state.each do |k, v|
             store[Time.now.to_i] = {k => v}
@@ -43,12 +44,12 @@ module Brewer
       end
 
       def create_log_file
-        File.open($log_file, 'w') unless File.exists?($log_file)
+        File.open($stats_dir + $log_file, 'w') unless File.exists?($stats_dir + $log_file)
         true
       end
 
       def clear_log_file
-        File.open($log_file, 'w') {|file| file.truncate(0) }
+        File.open($stats_dir + $log_file, 'w') {|file| file.truncate(0) }
         true
       end
 
