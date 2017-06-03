@@ -18,10 +18,10 @@ module Brewer
       return form.get_log_contents.to_json
     end
 
-    def self.log(file = $log_file, interval = 15)
+    def self.log(log_file: $log_file, interval: 15)
       logger = Logger.new
       logger.interval = interval
-      $log_file = file
+      $log_file = log_file
       logger.log
     end
   end
